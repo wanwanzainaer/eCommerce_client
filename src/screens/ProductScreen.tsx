@@ -1,14 +1,24 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
 import { Rating } from '../components/Rating';
-import products from '../products';
+import axios from 'axios';
+import { IProduct } from '../components/Product';
 
 interface props {
   match: { params: { id: string } };
 }
 
 const ProductScreen = ({ match }: props) => {
-  const product = products.find((p) => p._id === match.params.id);
+  const { id } = match.params;
+  const [product, setProduct] = useState<IProduct | undefined>();
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data } = await axios.get(`/api/products/${id}`);
+      setProduct(data);
+    };
+    fetchProduct();
+  }, [id]);
   if (!product) return <></>;
   return (
     <>
