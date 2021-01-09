@@ -16,13 +16,11 @@ interface reduxState {
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
-
   const productList = useSelector((state: reduxState) => state.productList);
   const { products, loading, error } = productList;
   useEffect(() => {
     dispatch(getListProducts());
   }, [dispatch]);
-
   return (
     <>
       <h1>Latest Prodeucts</h1>
