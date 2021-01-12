@@ -1,9 +1,9 @@
-import { Component } from 'react';
+import { ReactNode } from 'react';
 import { Alert } from 'react-bootstrap';
 
 interface props {
   variant: string;
-  children: string;
+  children: ReactNode;
 }
 
 const Message = ({ variant, children }: props) => {

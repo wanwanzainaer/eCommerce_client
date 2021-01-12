@@ -5,7 +5,6 @@ import { Dispatch } from 'redux';
 export const getListProducts = () => async (dispatch: Dispatch) => {
   try {
     dispatch({ type: productActionType.PRODUCT_LIST_REQUEST });
-
     const { data } = await axios.get('/api/products');
     dispatch({
       type: productActionType.PRODUCT_LIST_SUCCESS,

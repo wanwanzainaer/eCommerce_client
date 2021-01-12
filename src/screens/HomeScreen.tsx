@@ -16,13 +16,11 @@ interface reduxState {
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
-
   const productList = useSelector((state: reduxState) => state.productList);
   const { products, loading, error } = productList;
   useEffect(() => {
     dispatch(getListProducts());
   }, [dispatch]);
-
   return (
     <>
       <h1>Latest Prodeucts</h1>
@@ -34,8 +32,8 @@ const HomeScreen = () => {
         <Row>
           {products.map((product: IProduct) => {
             return (
-              <Col sm={12} md={6} lg={4} xl={3}>
-                <Product product={product} key={product._id} />
+              <Col sm={12} md={6} lg={4} xl={3} key={product._id}>
+                <Product product={product} />
               </Col>
             );
           })}
