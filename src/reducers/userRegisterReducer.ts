@@ -2,16 +2,14 @@ import { userActionType } from '../actions/userActionType';
 
 const initialState = {};
 
-export const userLoginReducer = (state = initialState, action: any) => {
+export const userRegisterReducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case userActionType.USER_LOGIN_REQUEST:
+    case userActionType.USER_REGISTER_REQUEST:
       return { ...state, loading: true };
-    case userActionType.USER_LOGIN_SUCCESS:
+    case userActionType.USER_REGISTER_SUCCESS:
       return { loading: false, userInfo: action.payload };
-    case userActionType.USER_LOGIN_FAIL:
+    case userActionType.USER_REGISTER_FAIL:
       return { ...state, loading: false, error: action.payload };
-    case userActionType.USER_LOGOUT:
-      return {};
     default:
       return state;
   }
