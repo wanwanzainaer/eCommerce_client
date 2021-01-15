@@ -43,3 +43,14 @@ export const saveShippingAddress = (formData: IShippingAddress) => async (
 
   localStorage.setItem('shippingAddress', JSON.stringify(formData));
 };
+
+export const savePaymentMethod = (paymentMethod: string) => async (
+  dispatch: Dispatch
+) => {
+  dispatch({
+    type: cartActionType.CART_SAVE_PAYMENT_METHOD,
+    payload: paymentMethod,
+  });
+
+  localStorage.setItem('paymentMethod', JSON.stringify(paymentMethod));
+};
