@@ -6,6 +6,7 @@ import { userLoginReducer } from './userLoginReducer';
 import { userRegisterReducer } from './userRegisterReducer';
 import { userDetailsReducer } from './userDetailsReducer';
 import { userUpdateProfileReducer } from './userUpdateProfileReducer';
+
 export const reducers = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
