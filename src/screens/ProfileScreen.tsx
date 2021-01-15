@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Message } from '../components/Message';
 import { Loader } from '../components/Loader';
 import { History } from 'history';
+import { userActionType } from '../actions/userActionType';
 
 import { getUserDetails, updateUserProfile } from '../actions/userActions';
 
@@ -47,14 +48,15 @@ const ProfileScreen = ({ location, history }: props) => {
     if (!userInfo) {
       history.push('/login');
     } else {
-      if (!user.name) {
+      if (!user || !user.name || success) {
+        dispatch({ type: userActionType.USER_UPDATE_PROFILE_REQUEST });
         dispatch(getUserDetails('profile'));
       } else {
         setName(user.name);
         setEmail(user.email);
       }
     }
-  }, [dispatch, history, userInfo, user.name, user.email]);
+  }, [dispatch, history, userInfo, user, success]);
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
