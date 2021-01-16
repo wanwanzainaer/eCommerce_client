@@ -1,4 +1,3 @@
-import { Stats } from 'fs';
 import { orderActionType } from '../actions/orderActionType';
 
 const initialState = {};

@@ -36,3 +36,39 @@ export const createOrder = (order: any) => async (
     });
   }
 };
+
+export const getOrderDetails = (id: string) => async (
+  dispatch: Dispatch,
+  getState: () => { userLogin: { userInfo: { token: string } } }
+) => {
+  try {
+    dispatch({
+      type: orderActionType.ORDER_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/orders/${id}`, config);
+    dispatch({
+      type: orderActionType.ORDER_DETAILS_SUCCESS,
+      payload: data,
+    });
+
+    localStorage.setItem('userInfo', JSON.stringify(data));
+  } catch (err) {
+    dispatch({
+      type: orderActionType.ORDER_DETAILS_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
