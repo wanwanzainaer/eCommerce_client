@@ -104,3 +104,36 @@ export const getOrderDetails = (id: string) => async (
     });
   }
 };
+
+export const listUserOrder = () => async (
+  dispatch: Dispatch,
+  getState: () => { userLogin: { userInfo: { token: string } } }
+) => {
+  try {
+    dispatch({
+      type: orderActionType.ORDER_LIST_USER_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/orders/userorder`, config);
+    dispatch({
+      type: orderActionType.ORDER_LIST_USER_SUCCESS,
+      payload: data,
+    });
+  } catch (err) {
+    dispatch({
+      type: orderActionType.ORDER_LIST_USER_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
