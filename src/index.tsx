@@ -7,6 +7,12 @@ import { Provider } from 'react-redux';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
+declare global {
+  interface Window {
+    paypal: any;
+  }
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <App />
