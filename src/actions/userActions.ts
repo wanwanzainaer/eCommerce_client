@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { userActionType } from './userActionType';
 import { Dispatch } from 'redux';
+
+import { userActionType } from './userActionType';
+import { orderActionType } from './orderActionType';
 
 export const login = (email: string, password: string) => async (
   dispatch: Dispatch
@@ -36,10 +38,11 @@ export const login = (email: string, password: string) => async (
   }
 };
 
-export const logout = () => {
+export const logout = () => (dispatch: Dispatch) => {
   localStorage.removeItem('userInfo');
-
-  return { type: userActionType.USER_LOGOUT };
+  dispatch({ type: userActionType.USER_DETAILS_RESET });
+  dispatch({ type: orderActionType.ORDER_LIST_USER_RESET });
+  dispatch({ type: userActionType.USER_LOGOUT });
 };
 export const register = (
   name: string,
