@@ -40,6 +40,7 @@ export const login = (email: string, password: string) => async (
 
 export const logout = () => (dispatch: Dispatch) => {
   localStorage.removeItem('userInfo');
+  dispatch({ type: userActionType.USER_LIST_RESET });
   dispatch({ type: userActionType.USER_DETAILS_RESET });
   dispatch({ type: orderActionType.ORDER_LIST_USER_RESET });
   dispatch({ type: userActionType.USER_LOGOUT });
@@ -150,6 +151,40 @@ export const updateUserProfile = (user: any) => async (
   } catch (err) {
     dispatch({
       type: userActionType.USER_UPDATE_PROFILE_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const getListUsers = () => async (
+  dispatch: Dispatch,
+  getState: () => { userLogin: { userInfo: { token: string } } }
+) => {
+  try {
+    dispatch({
+      type: userActionType.USER_LIST_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/users/`, config);
+    dispatch({
+      type: userActionType.USER_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (err) {
+    dispatch({
+      type: userActionType.USER_LIST_FAIL,
       payload:
         err.response && err.response.data.message
           ? err.response.data.message
