@@ -6,7 +6,7 @@ import { Message } from '../components/Message';
 import { Loader } from '../components/Loader';
 import { History } from 'history';
 
-import { getListUsers } from '../actions/userActions';
+import { getListUsers, deleteUser } from '../actions/userActions';
 
 interface IUser {
   _id: string;
@@ -22,6 +22,10 @@ interface ReduxState {
     userInfo: { isAdmin: boolean };
     error: string;
   };
+  userDelete: {
+    loading: boolean;
+    success: boolean;
+  };
 }
 
 interface props {
@@ -30,9 +34,12 @@ interface props {
 
 const UserListScreen = ({ history }: props) => {
   const dispatch = useDispatch();
-  const { userList, userLogin } = useSelector((state: ReduxState) => state);
+  const { userList, userLogin, userDelete } = useSelector(
+    (state: ReduxState) => state
+  );
   const { loading, error, users } = userList;
   const { userInfo } = userLogin;
+  const { success: successDelete } = userDelete;
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
@@ -40,9 +47,11 @@ const UserListScreen = ({ history }: props) => {
     } else {
       history.push('/login');
     }
-  }, [dispatch, userInfo, history]);
+  }, [dispatch, userInfo, history, successDelete]);
 
-  const deleteHandler = (userId: string) => {};
+  const deleteHandler = (userId: string) => {
+    dispatch(deleteUser(userId));
+  };
   return (
     <>
       <h1>Users</h1>

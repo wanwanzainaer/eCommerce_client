@@ -11,6 +11,7 @@ import { orderDetailReducer } from './orderDetailReducer';
 import { orderPayReducer } from './orderPayReducer';
 import { orderUserListReducer } from './orderUserListReducer';
 import { userListReducer } from './userListReducer';
+import { userDeleteReducer } from './userDeleteReducer';
 
 export const reducers = combineReducers({
   productList: productListReducer,
@@ -21,6 +22,7 @@ export const reducers = combineReducers({
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userList: userListReducer,
+  userDelete: userDeleteReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailReducer,
   orderPay: orderPayReducer,
