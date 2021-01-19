@@ -13,10 +13,15 @@ import { orderUserListReducer } from './orderUserListReducer';
 import { userListReducer } from './userListReducer';
 import { userDeleteReducer } from './userDeleteReducer';
 import { userUpdateReducer } from './userUpdateReducer';
+import { productCreateReducer } from './productCreateReducer';
+import { productUpdateReducer } from './productUpdateReducer';
+
 export const reducers = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
   productDelete: productDetailsReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,

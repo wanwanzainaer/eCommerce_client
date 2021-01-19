@@ -7,7 +7,12 @@ import { Loader } from '../components/Loader';
 import { History } from 'history';
 import { IProduct } from '../components/Product';
 
-import { deleteProduct, getListProducts } from '../actions/productActions';
+import {
+  deleteProduct,
+  getListProducts,
+  createProduct,
+} from '../actions/productActions';
+import { productActionType } from '../actions/productActionTypes';
 
 interface ReduxState {
   productList: { products: IProduct[]; loading: boolean; error: string };
@@ -22,6 +27,12 @@ interface ReduxState {
     success: boolean;
     error: string;
   };
+  productCreate: {
+    loading: boolean;
+    success: boolean;
+    error: string;
+    product: IProduct;
+  };
 }
 
 interface props {
@@ -30,7 +41,7 @@ interface props {
 
 const ProductListScreen = ({ history }: props) => {
   const dispatch = useDispatch();
-  const { productList, userLogin, productDelete } = useSelector(
+  const { productList, userLogin, productDelete, productCreate } = useSelector(
     (state: ReduxState) => state
   );
   const { loading, error, products } = productList;
@@ -39,15 +50,33 @@ const ProductListScreen = ({ history }: props) => {
     error: errorDelete,
     success: deleteSuccess,
   } = productDelete;
+
+  const {
+    loading: createLoading,
+    error: errorCreate,
+    success: createSuccess,
+    product: createdProduct,
+  } = productCreate;
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(getListProducts());
-    } else {
+    dispatch({ type: productActionType.PRODUCT_CREATE_RESET });
+    if (!userInfo.isAdmin) {
       history.push('/login');
     }
-  }, [dispatch, userInfo, history, deleteSuccess]);
+    if (createSuccess) {
+      history.push(`/admin/product/${createdProduct._id}/edit`);
+    } else {
+      dispatch(getListProducts());
+    }
+  }, [
+    dispatch,
+    userInfo,
+    history,
+    deleteSuccess,
+    createSuccess,
+    createdProduct,
+  ]);
 
   const deleteHandler = (productId: string) => {
     if (window.confirm('Are you sure?')) {
@@ -58,6 +87,7 @@ const ProductListScreen = ({ history }: props) => {
 
   const createProductHandler = (product: string) => {
     //CREATE PRODUCT
+    dispatch(createProduct());
   };
   return (
     <>
@@ -72,7 +102,9 @@ const ProductListScreen = ({ history }: props) => {
         </Col>
       </Row>
       {deleteLoading && <Loader />}
-      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+      {errorDelete && <Message variant="danger">{errorDelete}</Message>}{' '}
+      {createLoading && <Loader />}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
