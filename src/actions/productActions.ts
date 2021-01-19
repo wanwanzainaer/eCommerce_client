@@ -40,3 +40,35 @@ export const getProductDetails = (id: string) => async (dispatch: Dispatch) => {
     });
   }
 };
+
+export const deleteProduct = (id: string) => async (
+  dispatch: Dispatch,
+  getState: () => { userLogin: { userInfo: { token: string } } }
+) => {
+  try {
+    dispatch({
+      type: productActionType.PRODUCT_DELETE_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    await axios.get(`/api/products/${id}`, config);
+    dispatch({
+      type: productActionType.PRODUCT_DELETE_SUCCESS,
+    });
+  } catch (err) {
+    dispatch({
+      type: productActionType.PRODUCT_DELETE_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};

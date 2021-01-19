@@ -16,6 +16,7 @@ import { userUpdateReducer } from './userUpdateReducer';
 export const reducers = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
+  productDelete: productDetailsReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
