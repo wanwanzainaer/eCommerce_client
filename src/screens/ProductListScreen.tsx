@@ -50,7 +50,6 @@ const ProductListScreen = ({ history }: props) => {
     error: errorDelete,
     success: deleteSuccess,
   } = productDelete;
-
   const {
     loading: createLoading,
     error: errorCreate,
@@ -63,6 +62,9 @@ const ProductListScreen = ({ history }: props) => {
     dispatch({ type: productActionType.PRODUCT_CREATE_RESET });
     if (!userInfo.isAdmin) {
       history.push('/login');
+    }
+    if (deleteSuccess) {
+      dispatch(getListProducts());
     }
     if (createSuccess) {
       history.push(`/admin/product/${createdProduct._id}/edit`);

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { History } from 'history';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,8 +8,31 @@ import { Link } from 'react-router-dom';
 import { Message } from '../components/Message';
 import { Loader } from '../components/Loader';
 import { ICartItem, IShippingAddress } from '../reducers/cartReducer';
-import { getOrderDetails, payOrder } from '../actions/orderAction';
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder,
+} from '../actions/orderAction';
 import { orderActionType } from '../actions/orderActionType';
+export interface IOrder {
+  _id: string;
+  shippingAddress: IShippingAddress;
+  orderItems: ICartItem[];
+  paymentMethod: string;
+  itemsPrice: number;
+  taxPrice: number;
+  totalPrice: number;
+  shippingPrice: number;
+  isPaid: boolean;
+  paidAt: string;
+  deliveredAt: string;
+  isDelivered: boolean;
+  createdAt: string;
+  user: {
+    name: string;
+    email: string;
+  };
+}
 interface reduxState {
   cart: {
     cartItems: ICartItem[];
@@ -16,24 +40,7 @@ interface reduxState {
     paymentMethod: string;
   };
   orderDetails: {
-    order: {
-      _id: string;
-      shippingAddress: IShippingAddress;
-      orderItems: ICartItem[];
-      paymentMethod: string;
-      itemsPrice: number;
-      taxPrice: number;
-      totalPrice: number;
-      shippingPrice: number;
-      isPaid: boolean;
-      paidAt: Date;
-      deliveredAt: Date;
-      isDelivered: boolean;
-      user: {
-        name: string;
-        email: string;
-      };
-    };
+    order: IOrder;
     loading: boolean;
     error: string;
   };
@@ -41,21 +48,33 @@ interface reduxState {
     success: boolean;
     loading: boolean;
   };
+  orderDeliver: {
+    success: boolean;
+    loading: boolean;
+  };
+  userLogin: {
+    userInfo: { isAdmin: boolean };
+  };
 }
 
 interface props {
   match: { params: { id: string } };
+  history: History;
 }
 
-const OrderScreen = ({ match }: props) => {
+const OrderScreen = ({ match, history }: props) => {
   const orderId = match.params.id;
 
   const [sdkReady, setSdkReady] = useState(false);
 
   const dispatch = useDispatch();
-  const { orderDetails, orderPay } = useSelector((state: reduxState) => state);
+  const { orderDetails, orderPay, orderDeliver, userLogin } = useSelector(
+    (state: reduxState) => state
+  );
   const { order, loading, error } = orderDetails;
   const { loading: loadingPay, success: successPay } = orderPay;
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+  const { userInfo } = userLogin;
 
   let itemsPrice: number = 0;
   if (order)
@@ -64,6 +83,9 @@ const OrderScreen = ({ match }: props) => {
       0
     );
   useEffect(() => {
+    if (!userInfo) {
+      history.push('/login');
+    }
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal');
       const script = document.createElement('script');
@@ -76,8 +98,9 @@ const OrderScreen = ({ match }: props) => {
       document.body.appendChild(script);
     };
 
-    if (!order || order._id !== orderId || successPay) {
+    if (!order || order._id !== orderId || successPay || successDeliver) {
       dispatch({ type: orderActionType.ORDER_PAY_RESET });
+      dispatch({ type: orderActionType.ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -86,10 +109,14 @@ const OrderScreen = ({ match }: props) => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, orderId, successPay]);
+  }, [dispatch, order, orderId, successPay, successDeliver]);
   const successPaymentHandler = (paymentResult: any) => {
     console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(orderId));
   };
 
   return loading ? (
@@ -212,6 +239,18 @@ const OrderScreen = ({ match }: props) => {
                       onSuccess={successPaymentHandler}
                     />
                   )}
+                </ListGroup.Item>
+              )}
+              {loadingDeliver && <Loader />}
+              {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button
+                    type="button"
+                    className="btn btn-block"
+                    onClick={deliverHandler}
+                  >
+                    Mark As Deliver
+                  </Button>
                 </ListGroup.Item>
               )}
             </ListGroup>
