@@ -13,9 +13,17 @@ import { orderUserListReducer } from './orderUserListReducer';
 import { userListReducer } from './userListReducer';
 import { userDeleteReducer } from './userDeleteReducer';
 import { userUpdateReducer } from './userUpdateReducer';
+import { productCreateReducer } from './productCreateReducer';
+import { productUpdateReducer } from './productUpdateReducer';
+import { productDeleteReducer } from './productDeleteReducer';
+import { orderListReducer } from './orderListReducer';
+import { orderDeliverReducer } from './orderDeliverReducer';
 export const reducers = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
+  productDelete: productDeleteReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
@@ -28,4 +36,6 @@ export const reducers = combineReducers({
   orderDetails: orderDetailReducer,
   orderPay: orderPayReducer,
   orderUserList: orderUserListReducer,
+  orderList: orderListReducer,
+  orderDeliver: orderDeliverReducer,
 });
