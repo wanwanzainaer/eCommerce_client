@@ -20,6 +20,7 @@ import {
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
 import { productActionType } from '../actions/productActionTypes';
+import { Meta } from '../components/Meta';
 
 interface props {
   history: History;
@@ -82,6 +83,7 @@ const ProductScreen = ({ history, match }: props) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
+          <Meta title={product.name} description={product.description} />
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />
