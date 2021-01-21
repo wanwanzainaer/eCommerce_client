@@ -2,10 +2,14 @@ import axios from 'axios';
 import { productActionType } from './productActionTypes';
 import { Dispatch } from 'redux';
 
-export const getListProducts = () => async (dispatch: Dispatch) => {
+export const getListProducts = (keyword = '', pageNumber = 1) => async (
+  dispatch: Dispatch
+) => {
   try {
     dispatch({ type: productActionType.PRODUCT_LIST_REQUEST });
-    const { data } = await axios.get('/api/products');
+    const { data } = await axios.get(
+      `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
+    );
     dispatch({
       type: productActionType.PRODUCT_LIST_SUCCESS,
       payload: data,
@@ -169,6 +173,25 @@ export const createProductReview = (productId: string, review: any) => async (
   } catch (err) {
     dispatch({
       type: productActionType.PRODUCT_CREATE_REVIEW_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const getListTopProducts = () => async (dispatch: Dispatch) => {
+  try {
+    dispatch({ type: productActionType.PRODUCT_PRODUCT_TOP_REQUEST });
+    const { data } = await axios.get(`/api/products/top`);
+    dispatch({
+      type: productActionType.PRODUCT_PRODUCT_TOP_SUCCESS,
+      payload: data,
+    });
+  } catch (err) {
+    dispatch({
+      type: productActionType.PRODUCT_PRODUCT_TOP_FAIL,
       payload:
         err.response && err.response.data.message
           ? err.response.data.message
