@@ -1,6 +1,6 @@
 interface props {
   value: number;
-  text: string;
+  text?: string;
   color: string;
 }
 const Rating = ({ value, text, color }: props) => {
