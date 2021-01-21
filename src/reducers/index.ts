@@ -18,12 +18,14 @@ import { productUpdateReducer } from './productUpdateReducer';
 import { productDeleteReducer } from './productDeleteReducer';
 import { orderListReducer } from './orderListReducer';
 import { orderDeliverReducer } from './orderDeliverReducer';
+import { productCreateReviewReducer } from './productCreateReviewReducer';
 export const reducers = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
   productDelete: productDeleteReducer,
   productCreate: productCreateReducer,
   productUpdate: productUpdateReducer,
+  productCreateReview: productCreateReviewReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,

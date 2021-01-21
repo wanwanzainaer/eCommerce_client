@@ -15,6 +15,13 @@ export interface IProduct {
   countInStock: number;
   rating: number;
   numReviews: number;
+  reviews: {
+    _id: string;
+    name: string;
+    rating: number;
+    comment: string;
+    createdAt: string;
+  }[];
 }
 const Product = ({ product }: props) => {
   return (
